@@ -13,9 +13,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URL
-        fromDatabase:
-          name: studynotion-db
-          property: connectionString
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: MAIL_HOST
@@ -46,8 +44,3 @@ services:
     envVars:
       - key: REACT_APP_BASE_URL
         value: https://studynotion-backend.onrender.com/api/v1
-
-# Database
-databases:
-  - name: studynotion-db
-    plan: free
