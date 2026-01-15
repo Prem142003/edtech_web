@@ -1,0 +1,50 @@
+services:
+  # Backend API Service
+  - type: web
+    name: studynotion-backend
+    runtime: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm run dev
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: MONGODB_URL
+        fromDatabase:
+          name: studynotion-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASS
+        sync: false
+      - key: RAZORPAY_KEY
+        sync: false
+      - key: RAZORPAY_SECRET
+        sync: false
+      - key: CLOUD_NAME
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: API_SECRET
+        sync: false
+
+  # Frontend React Service
+  - type: web
+    name: studynotion-frontend
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm install -g serve && serve -s build -l 3000
+    envVars:
+      - key: REACT_APP_BASE_URL
+        value: https://studynotion-backend.onrender.com/api/v1
+
+# Database
+databases:
+  - name: studynotion-db
+    plan: free
+    ipAllowList: []
