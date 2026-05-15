@@ -30,13 +30,13 @@ function Home() {
           </div>
         </Link>
 
-        {/* Heading */}
+        {/* heading */}
         <div className="text-center text-4xl font-semibold">
           Empower Your Future with
           <HighlightText text={"Coding Skills"} />
         </div>
 
-        {/* Sub Heading */}
+        {/* sub heading */}
         <div className="-mt-3 w-[90%] text-center text-lg font-bold text-richblack-300">
           With our online coding courses, you can learn at your own pace, from
           anywhere in the world, and get access to a wealth of resources,
@@ -44,7 +44,7 @@ function Home() {
           instructors.
         </div>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons -> call to actoin buttons*/}
         <div className="mt-8 flex flex-row gap-7">
           <CTAButton active={true} linkto={"/signup"}>
             Learn More

@@ -12,6 +12,8 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("totalItems"))
     : 0,
 }
+// if cart data is already saved in localStorage, use it
+// otherwise start with empty values
 
 const cartSlice = createSlice({
   name: "cart",
