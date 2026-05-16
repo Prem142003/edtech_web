@@ -4,11 +4,18 @@ const mailSender = async (email, title, body) => {
   try {
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
-      port: 465,
-      secure: true,
+      port: process.env.MAIL_PORT || 587,
+      secure: process.env.MAIL_SECURE === 'true' ? true : false,
+      requireTLS: true,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
+      },
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      pool: {
+        maxConnections: 1,
+        maxMessages: 100,
       },
     })
 
@@ -18,10 +25,10 @@ const mailSender = async (email, title, body) => {
       subject: `${title}`, // Subject line
       html: `${body}`, // html body
     })
-    console.log(info.response)
+    console.log("Email sent successfully:", info.response)
     return info
   } catch (error) {
-    console.log(error.message)
+    console.log("Error sending email:", error.message)
     throw error
   }
 }
