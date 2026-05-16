@@ -1,5 +1,16 @@
 const nodemailer = require("nodemailer")
 
+let sgMail
+if (process.env.SENDGRID_API_KEY) {
+  try {
+    sgMail = require("@sendgrid/mail")
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  } catch (err) {
+    console.log("SendGrid module not available:", err.message)
+    sgMail = null
+  }
+}
+
 const createTransportOptions = () => {
   const mailOptions = {
     auth: {
@@ -46,7 +57,30 @@ const sendWithTransporter = async (transporter, email, title, body) => {
   })
 }
 
+const sendWithSendGrid = async (email, title, body) => {
+  if (!sgMail) throw new Error("SendGrid not configured")
+  const msg = {
+    to: email,
+    from: process.env.MAIL_USER,
+    subject: title,
+    html: body,
+  }
+  return sgMail.send(msg)
+}
+
 const mailSender = async (email, title, body) => {
+  // Prefer SendGrid API when available (often allowed from PaaS)
+  if (process.env.SENDGRID_API_KEY && sgMail) {
+    try {
+      const res = await sendWithSendGrid(email, title, body)
+      console.log("Email sent via SendGrid")
+      return res
+    } catch (err) {
+      console.log("SendGrid send failed:", err.message)
+      // fallthrough to SMTP
+    }
+  }
+
   const transportOptions = createTransportOptions()
   const transporter = createTransporter(transportOptions)
 
