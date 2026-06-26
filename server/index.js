@@ -29,9 +29,23 @@ database.connect();
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+	"http://localhost:3000",
+	"http://localhost:3001",
+	"https://studynotion-web-frontend.onrender.com",
+	"https://studynotion-web-frontend-bhsc.onrender.com",
+	"https://studynotion-web-backend-bhsc.onrender.com",
+]
+
 app.use(
 	cors({
-		origin: "*",
+		origin: function (origin, callback) {
+			if (!origin || allowedOrigins.includes(origin)) {
+				callback(null, true)
+			} else {
+				callback(null, false)
+			}
+		},
 		credentials: true,
 	})
 );
